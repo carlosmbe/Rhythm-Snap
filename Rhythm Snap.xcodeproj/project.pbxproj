@@ -16,6 +16,7 @@
 		B6FBF05129C60D81002CF067 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF05029C60D81002CF067 /* CameraPreview.swift */; };
 		B6FBF05329C60DB5002CF067 /* MagicProcesses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF05229C60DB5002CF067 /* MagicProcesses.swift */; };
 		B6FBF05529C60E15002CF067 /* Reactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF05429C60E15002CF067 /* Reactions.swift */; };
+		B6FBF05729C629E1002CF067 /* PinchProccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF05629C629E1002CF067 /* PinchProccess.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		B6FBF05029C60D81002CF067 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		B6FBF05229C60DB5002CF067 /* MagicProcesses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicProcesses.swift; sourceTree = "<group>"; };
 		B6FBF05429C60E15002CF067 /* Reactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reactions.swift; sourceTree = "<group>"; };
+		B6FBF05629C629E1002CF067 /* PinchProccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchProccess.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				B6FBF04B29C60C6C002CF067 /* Camera */,
 				B6AC8E9A29C52E7000B0DCC4 /* Assets.xcassets */,
 				B6AC8E9C29C52E7000B0DCC4 /* Preview Content */,
+				B6FBF05629C629E1002CF067 /* PinchProccess.swift */,
 			);
 			path = "Rhythm Snap";
 			sourceTree = "<group>";
@@ -162,6 +165,7 @@
 			files = (
 				B6FBF05129C60D81002CF067 /* CameraPreview.swift in Sources */,
 				B6FBF04D29C60D3C002CF067 /* CameraView.swift in Sources */,
+				B6FBF05729C629E1002CF067 /* PinchProccess.swift in Sources */,
 				B6FBF04F29C60D61002CF067 /* CameraViewController.swift in Sources */,
 				B6FBF05329C60DB5002CF067 /* MagicProcesses.swift in Sources */,
 				B6FBF05529C60E15002CF067 /* Reactions.swift in Sources */,

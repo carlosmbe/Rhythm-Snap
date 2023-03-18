@@ -17,66 +17,27 @@ func MagicWithHands(fingers:  [VNHumanHandPoseObservation.JointName : VNRecogniz
     
     var recognizedPoints: [VNRecognizedPoint] = []
     
-    if let thumbTipPoint = fingers[.thumbTip] {
+    if let thumbTipPoint = fingers[.thumbTip], let middleTipPoint = fingers[.middleTip]{
         recognizedPoints.append(thumbTipPoint)
-        if thumbTipPoint.confidence > 0.9{
+        recognizedPoints.append(middleTipPoint)
+        
+        if thumbTipPoint.confidence > 0.7 && middleTipPoint.confidence > 0.7{
             
             let thumbCGPoint = getFingerCGPoint(thumbTipPoint)
-            
-            if fingers[.middleTip]?.confidence ?? 0.0 > 0.8 {
+            let middlefingerCG = getFingerCGPoint(middleTipPoint)
                 
-                let middle = fingers[.middleTip]!
-               
-                recognizedPoints.append(middle)
-                let middlefingerCG = getFingerCGPoint(middle)
-                
-                
-                let threshold: Double = 0.1
-                if thumbTipPoint.distance(middle) < threshold {
-                    
-                    playMajorChord()//G V
-                  //  fingerReconsied(thumbTipCG: thumbCGPoint, otherFinger: littlefingerCG, fingerName: "Little")
-                }
-            
+            let threshold: Double = 0.1
+                  
+                if thumbTipPoint.distance(middleTipPoint) < threshold {
+                        print("They're touching")
+                        playMajorChord()//G V
+
+                    }
             }
-            /*else
-            
-            if fingers[.middleTip]?.confidence ?? 0.0 > 0.9 {
-                recognizedPoints.append(fingers[.middleTip]!)
-                playMajorChord(root: 65, finger: "Middle")//F IV
-            }else
-            
-            if fingers[.indexTip]?.confidence ?? 0.0 > 0.9{
-                recognizedPoints.append(fingers[.indexTip]!)
-                playMajorChord(finger: "Index")//Default c I
-            }
-            
-          /*  if let indexTipPoint = fingers[.indexTip]  {
-                if indexTipPoint.confidence > 0.9{
-                    recognizedPoints.append(indexTipPoint)
-                    playMajorChord()
-                }
-            }else
-            
-            if let middleTipPoint = fingers[.middleTip] {
-                recognizedPoints.append(middleTipPoint)
-            }else
-            if let ringTipPoint = fingers[.ringTip] {
-                recognizedPoints.append(ringTipPoint)
-            }else
-            if let littleTipPoint = fingers[.littleTip] {
-                recognizedPoints.append(littleTipPoint)
-            }
-           */
-              */
         }
     }
     
     
-    
-    
-    
-}
 
 func getFingerCGPoint(_ finger: VNRecognizedPoint) -> CGPoint{
     CGPoint(x: finger.location.x,   y: 1 - finger.location.y)
@@ -91,7 +52,19 @@ func fingerReconsied(thumbTipCG : CGPoint, otherFinger : CGPoint, fingerName : S
     let distance =  CGPointDistanceSquared(from: thumbTipCG, to: otherFinger)
     print("Distance between points  is \(distance)")
     if distance < 0.01{
-        playMajorChord()//G V
+        print("Distance less than 0.01")
     }
 }
 
+
+extension CGPoint {
+
+    static func midPoint(p1: CGPoint, p2: CGPoint) -> CGPoint {
+        return CGPoint(x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2)
+    }
+    
+    func distance(from point: CGPoint) -> CGFloat {
+        return hypot(point.x - x, point.y - y)
+    }
+    
+}

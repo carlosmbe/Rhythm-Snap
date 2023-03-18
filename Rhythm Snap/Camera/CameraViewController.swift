@@ -30,6 +30,7 @@ final class CameraViewController : UIViewController{
         do{
             if cameraFeedSession == nil{
                 try setupAVSession()
+                
                 cameraView.previewLayer.session = cameraFeedSession
                 //MARK: Commented out cause it cropped
              //   cameraView.previewLayer.videoGravity = .resizeAspectFill
@@ -118,7 +119,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
           }
         }
 
-
         
         let handler = VNImageRequestHandler(cmSampleBuffer: sampleBuffer,   orientation: .up,   options: [:])
         
@@ -129,7 +129,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
                 return
             }
             
-            print(results)
+            //print(results)
             //Drawing results
             
             var recognizedPoints: [VNRecognizedPoint] = []
@@ -139,78 +139,25 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
                 let fingers = try observation.recognizedPoints(.all)
                // MagicWithHands(fingers: fingers)
                 
-                if let thumbTipPoint = fingers[.thumbTip] {
+                if let thumbTipPoint = fingers[.thumbTip], let middleTipPoint = fingers[.middleTip]{
                     recognizedPoints.append(thumbTipPoint)
-                    if thumbTipPoint.confidence > 0.9{
+                    recognizedPoints.append(middleTipPoint)
+                    
+                    if thumbTipPoint.confidence > 0.7 && middleTipPoint.confidence > 0.7{
                         
                         let thumbCGPoint = getFingerCGPoint(thumbTipPoint)
-                        
-                        if fingers[.middleTip]?.confidence ?? 0.0 > 0.8 {
+                        let middlefingerCG = getFingerCGPoint(middleTipPoint)
                             
-                            let middle = fingers[.middleTip]!
-                            
-                            recognizedPoints.append(middle)
-                            let middlefingerCG = getFingerCGPoint(middle)
-                            
-                            
-                            let threshold: Double = 0.021
-                            if thumbTipPoint.distance(middle) < threshold {
-                                
-                                playMajorChord()//G V
-                                //  fingerReconsied(thumbTipCG: thumbCGPoint, otherFinger: littlefingerCG, fingerName: "Little")
-                            }
-                            
+                        let threshold: Double = 0.1
+                              
+                            if thumbTipPoint.distance(middleTipPoint) < threshold {
+                                    print("They're touching")
+                                    playMajorChord()//G V
+
+                                }
                         }
                     }
-                }
-                
-                
-                //MARK: The following code was moved into a different function(MagicWithHands) for readablity. I'm keeping it here for reference.
-                
-                
-                /*
-                if let thumbTipPoint = fingers[.thumbTip] {
-                    recognizedPoints.append(thumbTipPoint)
-                    if thumbTipPoint.confidence > 0.9{
-                        
-                        
-                        
-                        if fingers[.indexTip]?.confidence ?? 0.0 > 0.9{
-                            recognizedPoints.append(fingers[.indexTip]!)
-                            playMajorChord(finger: "Index")//Default c I
-                        }else
-                        
-                        if fingers[.middleTip]?.confidence ?? 0.0 > 0.9 {
-                            recognizedPoints.append(fingers[.middleTip]!)
-                            playMajorChord(root: 65, finger: "Middle")//F IV
-                        }else
-                        
-                        if fingers[.littleTip]?.confidence ?? 0.0 > 0.9 {
-                            recognizedPoints.append(fingers[.littleTip]!)
-                            playMajorChord(root: 67, finger: "Little")//G V
-                        }
-                        
-                      /*  if let indexTipPoint = fingers[.indexTip]  {
-                            if indexTipPoint.confidence > 0.9{
-                                recognizedPoints.append(indexTipPoint)
-                                playMajorChord()
-                            }
-                        }else
-                        
-                        if let middleTipPoint = fingers[.middleTip] {
-                            recognizedPoints.append(middleTipPoint)
-                        }else
-                        if let ringTipPoint = fingers[.ringTip] {
-                            recognizedPoints.append(ringTipPoint)
-                        }else
-                        if let littleTipPoint = fingers[.littleTip] {
-                            recognizedPoints.append(littleTipPoint)
-                        }
-                       */
-                    }
-                }
-                
-                */
+            
             }
             
             fingerTips = recognizedPoints.filter {
