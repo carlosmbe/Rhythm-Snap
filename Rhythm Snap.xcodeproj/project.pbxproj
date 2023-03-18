@@ -11,6 +11,11 @@
 		B6AC8E9929C52E6D00B0DCC4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AC8E9829C52E6D00B0DCC4 /* ContentView.swift */; };
 		B6AC8E9B29C52E7000B0DCC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6AC8E9A29C52E7000B0DCC4 /* Assets.xcassets */; };
 		B6AC8E9E29C52E7000B0DCC4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6AC8E9D29C52E7000B0DCC4 /* Preview Assets.xcassets */; };
+		B6FBF04D29C60D3C002CF067 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF04C29C60D3C002CF067 /* CameraView.swift */; };
+		B6FBF04F29C60D61002CF067 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF04E29C60D61002CF067 /* CameraViewController.swift */; };
+		B6FBF05129C60D81002CF067 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF05029C60D81002CF067 /* CameraPreview.swift */; };
+		B6FBF05329C60DB5002CF067 /* MagicProcesses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF05229C60DB5002CF067 /* MagicProcesses.swift */; };
+		B6FBF05529C60E15002CF067 /* Reactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FBF05429C60E15002CF067 /* Reactions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,11 @@
 		B6AC8E9829C52E6D00B0DCC4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B6AC8E9A29C52E7000B0DCC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6AC8E9D29C52E7000B0DCC4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B6FBF04C29C60D3C002CF067 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		B6FBF04E29C60D61002CF067 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		B6FBF05029C60D81002CF067 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		B6FBF05229C60DB5002CF067 /* MagicProcesses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicProcesses.swift; sourceTree = "<group>"; };
+		B6FBF05429C60E15002CF067 /* Reactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reactions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +63,9 @@
 			children = (
 				B6AC8E9629C52E6D00B0DCC4 /* Rhythm_SnapApp.swift */,
 				B6AC8E9829C52E6D00B0DCC4 /* ContentView.swift */,
+				B6FBF05229C60DB5002CF067 /* MagicProcesses.swift */,
+				B6FBF05429C60E15002CF067 /* Reactions.swift */,
+				B6FBF04B29C60C6C002CF067 /* Camera */,
 				B6AC8E9A29C52E7000B0DCC4 /* Assets.xcassets */,
 				B6AC8E9C29C52E7000B0DCC4 /* Preview Content */,
 			);
@@ -65,6 +78,16 @@
 				B6AC8E9D29C52E7000B0DCC4 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B6FBF04B29C60C6C002CF067 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				B6FBF04C29C60D3C002CF067 /* CameraView.swift */,
+				B6FBF04E29C60D61002CF067 /* CameraViewController.swift */,
+				B6FBF05029C60D81002CF067 /* CameraPreview.swift */,
+			);
+			path = Camera;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,6 +160,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6FBF05129C60D81002CF067 /* CameraPreview.swift in Sources */,
+				B6FBF04D29C60D3C002CF067 /* CameraView.swift in Sources */,
+				B6FBF04F29C60D61002CF067 /* CameraViewController.swift in Sources */,
+				B6FBF05329C60DB5002CF067 /* MagicProcesses.swift in Sources */,
+				B6FBF05529C60E15002CF067 /* Reactions.swift in Sources */,
 				B6AC8E9929C52E6D00B0DCC4 /* ContentView.swift in Sources */,
 				B6AC8E9729C52E6D00B0DCC4 /* Rhythm_SnapApp.swift in Sources */,
 			);
@@ -270,6 +298,7 @@
 				DEVELOPMENT_TEAM = 5UJL58M7XY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) This is a Vision Expirence and needs to see to work. \\n :D";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -299,6 +328,7 @@
 				DEVELOPMENT_TEAM = 5UJL58M7XY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) This is a Vision Expirence and needs to see to work. \\n :D";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
