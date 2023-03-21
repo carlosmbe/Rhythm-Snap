@@ -16,6 +16,11 @@ enum errors: Error{
 
 final class CameraViewController : UIViewController{
     
+    private var gestureProcessor = HandGestureProcessor()
+    private var evidenceBuffer = [HandGestureProcessor.PointsPair]()
+    
+    private var lastObservationTimestamp = Date()
+    
     private var cameraFeedSession: AVCaptureSession?
     
     override func loadView() {
@@ -24,6 +29,13 @@ final class CameraViewController : UIViewController{
     
     private var cameraView: CameraPreview{ view as! CameraPreview}
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Add state change handler to hand gesture processor.
+        gestureProcessor.didChangeStateClosure = { [weak self] state in
+            self?.handleGestureStateChange(state: state)
+        }
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -102,6 +114,57 @@ final class CameraViewController : UIViewController{
       }
 
       pointsProcessorHandler?(convertedPoints)
+    }
+    
+    func pinchProcessPoints(thumbTip: CGPoint?, indexTip: CGPoint?) {
+        // Check that we have both points.
+        guard let thumbPoint = thumbTip, let indexPoint = indexTip else {
+            // If there were no observations for more than 2 seconds reset gesture processor.
+            if Date().timeIntervalSince(lastObservationTimestamp) > 2 {
+                gestureProcessor.reset()
+            }
+           // cameraView.showPoints([], color: .clear)
+            return
+        }
+        
+        // Convert points from AVFoundation coordinates to UIKit coordinates.
+        let previewLayer = cameraView.previewLayer
+        let thumbPointConverted = previewLayer.layerPointConverted(fromCaptureDevicePoint: thumbPoint)
+        let indexPointConverted = previewLayer.layerPointConverted(fromCaptureDevicePoint: indexPoint)
+        
+        // Process new points
+        gestureProcessor.processPointsPair((thumbPointConverted, indexPointConverted))
+    }
+    
+    //TODO: MAke Update path be a log BPM Button
+    private func handleGestureStateChange(state: HandGestureProcessor.State) {
+        let pointsPair = gestureProcessor.lastProcessedPointsPair
+        var tipsColor: UIColor
+        switch state {
+        case .possiblePinch, .possibleApart:
+            // We are in one of the "possible": states, meaning there is not enough evidence yet to determine
+            // if we want to draw or not. For now, collect points in the evidence buffer, so we can add them
+            // to a drawing path when required.
+            evidenceBuffer.append(pointsPair)
+            tipsColor = .orange
+        case .pinched:
+            // We have enough evidence to draw. Draw the points collected in the evidence buffer, if any.
+            for bufferedPoints in evidenceBuffer {
+                updatePath(with: bufferedPoints, isLastPointsPair: false)
+            }
+            // Clear the evidence buffer.
+            evidenceBuffer.removeAll()
+            // Finally, draw the current point.
+            updatePath(with: pointsPair, isLastPointsPair: false)
+            tipsColor = .green
+        case .apart, .unknown:
+            // We have enough evidence to not draw. Discard any evidence buffer points.
+            evidenceBuffer.removeAll()
+            // And draw the last segment of our draw path.
+            updatePath(with: pointsPair, isLastPointsPair: true)
+            tipsColor = .red
+        }
+        cameraView.showPoints([pointsPair.thumbTip, pointsPair.indexTip], color: tipsColor)
     }
     
 }
