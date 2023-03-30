@@ -35,7 +35,7 @@ class HandGestureProcessor {
     
     private (set) var lastProcessedPointsPair = PointsPair(.zero, .zero)
     
-    init(pinchMaxDistance: CGFloat = 40, evidenceCounterStateTrigger: Int = 3) {
+    init(pinchMaxDistance: CGFloat = 20, evidenceCounterStateTrigger: Int = 3) {
         self.pinchMaxDistance = pinchMaxDistance
         self.evidenceCounterStateTrigger = evidenceCounterStateTrigger
     }

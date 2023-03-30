@@ -96,30 +96,23 @@ final class CameraViewController : UIViewController{
     }
     
     
-    //MARK: Vision Stuff Below
+    //MARK: Vision Functions and Init Below
     
     private let handPoseRequest : VNDetectHumanHandPoseRequest = {
         let request = VNDetectHumanHandPoseRequest()
         request.maximumHandCount = 1
         return request
     }()
-    
  
     var pointsProcessorHandler: (([CGPoint]) -> Void)?
-
-    func processPoints(_ fingerTips: [CGPoint]) {
-      
-      let convertedPoints = fingerTips.map {
-        cameraView.previewLayer.layerPointConverted(fromCaptureDevicePoint: $0)
-      }
-
-      pointsProcessorHandler?(convertedPoints)
-    }
     
-    func pinchProcessPoints(thumbTip: CGPoint?, indexTip: CGPoint?) {
+    func snapProcessPoints(thumbTip: CGPoint?, middleTip: CGPoint?) {
         // Check that we have both points.
-        guard let thumbPoint = thumbTip, let indexPoint = indexTip else {
+        
+        guard let thumbPoint = thumbTip, let middlePoint = middleTip else {
             // If there were no observations for more than 2 seconds reset gesture processor.
+            
+            //MARK: Change the time interval to BPM Time in MS
             if Date().timeIntervalSince(lastObservationTimestamp) > 2 {
                 gestureProcessor.reset()
             }
@@ -129,56 +122,73 @@ final class CameraViewController : UIViewController{
         
         // Convert points from AVFoundation coordinates to UIKit coordinates.
         let previewLayer = cameraView.previewLayer
+        
         let thumbPointConverted = previewLayer.layerPointConverted(fromCaptureDevicePoint: thumbPoint)
-        let indexPointConverted = previewLayer.layerPointConverted(fromCaptureDevicePoint: indexPoint)
+        let middlePointConverted = previewLayer.layerPointConverted(fromCaptureDevicePoint: middlePoint)
         
         // Process new points
-        gestureProcessor.processPointsPair((thumbPointConverted, indexPointConverted))
+        gestureProcessor.processPointsPair((thumbPointConverted, middlePointConverted))
     }
     
-    //TODO: MAke Update path be a log BPM Button
     private func handleGestureStateChange(state: HandGestureProcessor.State) {
         let pointsPair = gestureProcessor.lastProcessedPointsPair
         var tipsColor: UIColor
+     
+        
         switch state {
+            
         case .possiblePinch, .possibleApart:
             // We are in one of the "possible": states, meaning there is not enough evidence yet to determine
             // if we want to draw or not. For now, collect points in the evidence buffer, so we can add them
             // to a drawing path when required.
             evidenceBuffer.append(pointsPair)
             tipsColor = .orange
+        
         case .pinched:
-            // We have enough evidence to draw. Draw the points collected in the evidence buffer, if any.
+            /* We have enough evidence to draw. Draw the points collected in the evidence buffer, if any.
             for bufferedPoints in evidenceBuffer {
-                updatePath(with: bufferedPoints, isLastPointsPair: false)
-            }
+                updatePath(with: bufferedPoints, from: "Pinched")
+            }*/
             // Clear the evidence buffer.
             evidenceBuffer.removeAll()
             // Finally, draw the current point.
-            updatePath(with: pointsPair, isLastPointsPair: false)
+            updatePath(with: pointsPair, from: "Pinched")
             tipsColor = .green
+            
+            
         case .apart, .unknown:
             // We have enough evidence to not draw. Discard any evidence buffer points.
             evidenceBuffer.removeAll()
             // And draw the last segment of our draw path.
-            updatePath(with: pointsPair, isLastPointsPair: true)
+         //   updatePath(with: pointsPair)
             tipsColor = .red
         }
-        cameraView.showPoints([pointsPair.thumbTip, pointsPair.indexTip], color: tipsColor)
+     //MARK: COMMENTED OUT CAUSE IDK WHETHERE OR NOT TO KEEP   cameraView.showPoints([pointsPair.thumbTip, pointsPair.middleTip], color: tipsColor)
     }
     
+    
+    //TODO: MAke update path be a log BPM Button
+    private func updatePath(with points: HandGestureProcessor.PointsPair, from source: String) {
+        // Get the mid point between the tips.
+        print("They're touching Update Path")
+    }
+
 }
 
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
-    //Handler and Observation
+    //MARK: Handler, Observation and General Output processing
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
         var fingerTips: [CGPoint] = []
+        
+        var thumbCGPoint : CGPoint?
+        var middlefingerCG : CGPoint?
+        
         defer {
           DispatchQueue.main.sync {
-            self.processPoints(fingerTips)
+              self.snapProcessPoints(thumbTip: thumbCGPoint, middleTip: middlefingerCG)
           }
         }
 
@@ -186,53 +196,42 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
         let handler = VNImageRequestHandler(cmSampleBuffer: sampleBuffer,   orientation: .up,   options: [:])
         
         do{
+            //MARK: Vision Processing starts here
             try handler.perform([handPoseRequest])
             
-            guard let results = handPoseRequest.results?.prefix(2),     !results.isEmpty  else{
+            guard let results = handPoseRequest.results?.prefix(2),  !results.isEmpty  else{
                 return
             }
-            
-            //print(results)
-            //Drawing results
             
             var recognizedPoints: [VNRecognizedPoint] = []
             
             try results.forEach { observation in
                 
                 let fingers = try observation.recognizedPoints(.all)
-               // MagicWithHands(fingers: fingers)
                 
-                if let thumbTipPoint = fingers[.thumbTip], let middleTipPoint = fingers[.middleTip]{
-                    recognizedPoints.append(thumbTipPoint)
-                    recognizedPoints.append(middleTipPoint)
-                    
-                    if thumbTipPoint.confidence > 0.7 && middleTipPoint.confidence > 0.7{
-                        
-                        let thumbCGPoint = getFingerCGPoint(thumbTipPoint)
-                        let middlefingerCG = getFingerCGPoint(middleTipPoint)
-                            
-                        let threshold: Double = 0.1
-                              
-                            if thumbTipPoint.distance(middleTipPoint) < threshold {
-                                    print("They're touching")
-                                    playMajorChord()//G V
-
-                                }
-                        }
-                    }
-            
+                guard let thumbTipPoint = fingers[.thumbTip], let middleTipPoint = fingers[.middleTip] else{
+                    return
+                }
+                
+                recognizedPoints.append(thumbTipPoint)
+                recognizedPoints.append(middleTipPoint)
+                
+                guard thumbTipPoint.confidence > 0.7 && middleTipPoint.confidence > 0.7 else{
+                    return
+                }
+                
+                thumbCGPoint = getFingerCGPoint(thumbTipPoint)
+                middlefingerCG = getFingerCGPoint(middleTipPoint)
+                
+                fingerTips = recognizedPoints.filter {  $0.confidence > 0.9 }
+                .map {
+                    // Vision algorithms use a coordinate system with lower left origin and return normalized values relative to the pixel dimension of the input image. AVFoundation coordinates have an upper-left origin, so you convert the y-coordinate.
+                    CGPoint(x: $0.location.x, y: 1 - $0.location.y)
+                }
+                
             }
-            
-            fingerTips = recognizedPoints.filter {
-              $0.confidence > 0.9
-            }
-            .map {
-              // Vision algorithms use a coordinate system with lower left origin and return normalized values relative to the pixel dimension of the input image. AVFoundation coordinates have an upper-left origin, so you convert the y-coordinate.
-              CGPoint(x: $0.location.x, y: 1 - $0.location.y)
-            }
-            
-            
-        }catch{
+        }
+        catch{
             cameraFeedSession?.stopRunning()
         }
         
