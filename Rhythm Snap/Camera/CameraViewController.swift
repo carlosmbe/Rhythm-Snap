@@ -113,7 +113,7 @@ final class CameraViewController : UIViewController{
             // If there were no observations for more than 2 seconds reset gesture processor.
             
             //MARK: Change the time interval to BPM Time in MS
-            if Date().timeIntervalSince(lastObservationTimestamp) > 2 {
+            if Date().timeIntervalSince(lastObservationTimestamp) > (0.6316 * 2) {
                 gestureProcessor.reset()
             }
            // cameraView.showPoints([], color: .clear)

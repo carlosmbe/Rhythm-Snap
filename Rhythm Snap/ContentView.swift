@@ -25,7 +25,7 @@ struct ContentView: View {
     var body: some View {
        
         ZStack {
-            CameraViewFinder.rotationEffect(.degrees(-90))
+            CameraViewFinder.rotationEffect(.degrees(90))
 
             BPMView()
         }
@@ -43,7 +43,7 @@ struct BPMView: View {
     
     @State private var timeElapsed: Int = 0
     
-    let timer = Timer.publish(every:  0.6316, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every:  0.6316 * 2, on: .main, in: .common).autoconnect()
     
     @State private var allAccurateBeats = [TimeInterval]()
     
@@ -107,14 +107,15 @@ struct BPMView: View {
                     
                     AudioServicesPlaySystemSound(SystemSoundID(1057))
                     
-                    let bpm =  0.6316 //632MS is 1/4 at 95 BPM Tempo. That's what somber dreams is at
+                    let bpm =  0.6316 * 2//632MS is 1/4 at 95 BPM Tempo. That's what somber dreams is at
+                    
                     let fullInterval = firedDate.timeIntervalSince(startDate)
                     allAccurateBeats.append(fullInterval)
                     
                  
                    // print(allAccurateBeats)
                  
-                    if timeElapsed >= 4 {  timeElapsed = 1
+                    if timeElapsed >= 2 {  timeElapsed = 1
                     }  else{ timeElapsed += 1    }
                     
                     
