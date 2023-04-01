@@ -14,7 +14,7 @@ struct Rhythm_SnapApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            OnboardingView()
                 .environmentObject(bpmTracker)
         }
     }

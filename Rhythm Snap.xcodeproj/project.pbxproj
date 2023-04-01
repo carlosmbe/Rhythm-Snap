@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B610FC4D29D8892B005B5A00 /* song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B610FC4C29D8892B005B5A00 /* song.mp3 */; };
+		B610FC5029D88A20005B5A00 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610FC4F29D88A20005B5A00 /* OnboardingView.swift */; };
 		B63D5ADF29D60AE6001A12BA /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63D5ADE29D60AE6001A12BA /* Helpers.swift */; };
 		B6AC8E9729C52E6D00B0DCC4 /* Rhythm_SnapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AC8E9629C52E6D00B0DCC4 /* Rhythm_SnapApp.swift */; };
 		B6AC8E9929C52E6D00B0DCC4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AC8E9829C52E6D00B0DCC4 /* ContentView.swift */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B610FC4C29D8892B005B5A00 /* song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = song.mp3; path = "Rhythm Snap/song.mp3"; sourceTree = SOURCE_ROOT; };
+		B610FC4F29D88A20005B5A00 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		B63D5ADE29D60AE6001A12BA /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		B6AC8E9329C52E6D00B0DCC4 /* Rhythm Snap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rhythm Snap.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6AC8E9629C52E6D00B0DCC4 /* Rhythm_SnapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rhythm_SnapApp.swift; sourceTree = "<group>"; };
@@ -46,6 +50,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B610FC4E29D88A0D005B5A00 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B6AC8E9829C52E6D00B0DCC4 /* ContentView.swift */,
+				B610FC4F29D88A20005B5A00 /* OnboardingView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		B6AC8E8A29C52E6D00B0DCC4 = {
 			isa = PBXGroup;
 			children = (
@@ -66,7 +79,8 @@
 			isa = PBXGroup;
 			children = (
 				B6AC8E9629C52E6D00B0DCC4 /* Rhythm_SnapApp.swift */,
-				B6AC8E9829C52E6D00B0DCC4 /* ContentView.swift */,
+				B610FC4C29D8892B005B5A00 /* song.mp3 */,
+				B610FC4E29D88A0D005B5A00 /* Views */,
 				B6FBF04B29C60C6C002CF067 /* Camera */,
 				B6CBC18729D80E8900BF6896 /* Models */,
 				B6AC8E9A29C52E7000B0DCC4 /* Assets.xcassets */,
@@ -164,6 +178,7 @@
 			files = (
 				B6AC8E9E29C52E7000B0DCC4 /* Preview Assets.xcassets in Resources */,
 				B6AC8E9B29C52E7000B0DCC4 /* Assets.xcassets in Resources */,
+				B610FC4D29D8892B005B5A00 /* song.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +192,7 @@
 				B6FBF05129C60D81002CF067 /* CameraPreview.swift in Sources */,
 				B6FBF04D29C60D3C002CF067 /* CameraView.swift in Sources */,
 				B6ACCE1E29D7F92900E2D324 /* BPM Stuff.swift in Sources */,
+				B610FC5029D88A20005B5A00 /* OnboardingView.swift in Sources */,
 				B6FBF05729C629E1002CF067 /* HandGestureProcessor.swift in Sources */,
 				B63D5ADF29D60AE6001A12BA /* Helpers.swift in Sources */,
 				B6FBF04F29C60D61002CF067 /* CameraViewController.swift in Sources */,

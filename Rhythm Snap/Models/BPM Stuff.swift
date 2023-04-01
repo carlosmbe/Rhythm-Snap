@@ -5,12 +5,15 @@
 //  Created by Carlos Mbendera on 2023-04-01.
 //
 
+import AVFoundation
 import SwiftUI
 
 class BpmTracker: ObservableObject {
     
+    var audioPlayer: AVAudioPlayer?
+    
     @Published var logged = false
-    @Published var testName = "I was not changed"
+
     
     @Published var performance = ""
     @Published var perfColour = Color.purple
@@ -27,7 +30,6 @@ class BpmTracker: ObservableObject {
     private let allowedTimeWindow: TimeInterval = 0.4
     
     func logBPM() {
-        testName = "AAAAAAAaaaaa"
         
         let userTime = Date().timeIntervalSince(startDate)
         userLoggedTimes.append(userTime)
@@ -54,7 +56,6 @@ class BpmTracker: ObservableObject {
         startDate = Date(timeIntervalSinceNow: nextBeat - userTime)
     }
     
-    
     private func findNearestBeatScore(_ userTime: TimeInterval) -> TimeInterval {
         var minScore = TimeInterval.greatestFiniteMagnitude
         
@@ -67,6 +68,23 @@ class BpmTracker: ObservableObject {
         
         return minScore
     }
+    
+    func setupAudioPlayer() {
+        if let path = Bundle.main.path(forResource: "song", ofType: "mp3") {
+            let url = URL(fileURLWithPath: path)
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer?.volume = 1.0
+                audioPlayer?.prepareToPlay()
+            } catch {
+                print("Error initializing audio player: \(error.localizedDescription)")
+            }
+        } else {
+            print("Audio file not found")
+        }
+    }
+    
+    
 }
 
 

@@ -13,7 +13,6 @@ struct ContentView: View {
     
     @EnvironmentObject var bpmTracker: BpmTracker
     
-    
     //MARK: Overlays work. Not using overlay array with chords right nnow. Mainly for debugging
     @State private var overlayPoints: [CGPoint] = []
     
@@ -31,8 +30,8 @@ struct ContentView: View {
         ZStack {
             CameraViewFinder.rotationEffect(.degrees(-90))
 
-            BPMView().environmentObject(bpmTracker)
-            
+            BPMView()
+                .environmentObject(bpmTracker)
         }
     }
 }
@@ -60,15 +59,9 @@ struct BPMView: View {
                 
             }
             
-            Button("Log Time", action: bpmTracker.logBPM)
-                .buttonStyle(.borderedProminent)
-                .padding()
-            
             Text(bpmTracker.performance)
                 .foregroundColor(bpmTracker.perfColour)
                 .padding()
-            
-            Text(bpmTracker.testName).font(.title)
             
             Text("Counts: \(bpmTracker.allAccurateBeats.count % 2 + 1) beats")
                 // Use bpmTracker.timer for the audio effect and beat count
