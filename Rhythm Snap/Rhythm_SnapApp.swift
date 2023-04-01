@@ -11,7 +11,9 @@ import SwiftUI
 struct Rhythm_SnapApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            //MARK: REMOVE
+            let demoInstance = BpmTracker()
+            ContentView(bpmTracker: demoInstance)
         }
     }
 }
