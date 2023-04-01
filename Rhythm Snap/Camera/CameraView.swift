@@ -9,11 +9,14 @@ import SwiftUI
 
 struct CameraView: UIViewControllerRepresentable{
     
+    @EnvironmentObject var bpmTracker: BpmTracker
+    
     var pointsProcessorHandler: (([CGPoint]) -> Void)?
     
     func makeUIViewController(context: Context) -> CameraViewController {
         let cvc = CameraViewController()
         cvc.pointsProcessorHandler = pointsProcessorHandler
+        cvc.bpmTracker = bpmTracker
         return cvc
     }
     

@@ -7,12 +7,11 @@
 
 import SwiftUI
 
-
-let demoInstance = BpmTracker()
-
 class BpmTracker : ObservableObject{
     
     @Published var logged = false
+    
+    @Published var testName = "I was not changed"
     
     @Published var performance = ""
     @Published var perfColour = Color.purple
@@ -30,6 +29,9 @@ class BpmTracker : ObservableObject{
     @Published var userLoggedTimes = [TimeInterval]()
     
     func logBPM(){
+        
+        testName = "AAAAAAAAAAa"
+
         
         let userTime = Date.now.timeIntervalSince(startDate)
         userLoggedTimes.append(userTime)

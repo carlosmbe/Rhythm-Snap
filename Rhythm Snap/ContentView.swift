@@ -12,7 +12,8 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var bpmTracker: BpmTracker
+    @EnvironmentObject var bpmTracker: BpmTracker
+    
     
     //MARK: Overlays work. Not using overlay array with chords right nnow. Mainly for debugging
     @State private var overlayPoints: [CGPoint] = []
@@ -20,7 +21,7 @@ struct ContentView: View {
     var CameraViewFinder : some View{
         CameraView {    overlayPoints = $0  }
             .overlay(FingersOverlay(with: overlayPoints)
-                .foregroundColor(.green)
+            .foregroundColor(.green)
             )
             .ignoresSafeArea()
         
@@ -31,7 +32,7 @@ struct ContentView: View {
         ZStack {
             CameraViewFinder.rotationEffect(.degrees(90))
 
-            BPMView(bpmTracker: bpmTracker)
+            BPMView().environmentObject(bpmTracker)
             
         }
     }
@@ -40,7 +41,7 @@ struct ContentView: View {
 
 struct BPMView: View {
     
-    @ObservedObject var bpmTracker: BpmTracker
+    @EnvironmentObject var bpmTracker: BpmTracker
 
     var body: some View {
         VStack {
@@ -67,6 +68,8 @@ struct BPMView: View {
             Text(bpmTracker.performance)
                 .foregroundColor(bpmTracker.perfColour)
                 .padding()
+            
+            Text(bpmTracker.testName).font(.title)
             
             Text("Counts: \(bpmTracker.timeElapsed) sec")
                      // 2

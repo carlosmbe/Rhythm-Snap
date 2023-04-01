@@ -16,9 +16,8 @@ enum errors: Error{
 
 final class CameraViewController : UIViewController{
     
-    
-    let bpmTracker = BpmTracker()
-    
+    var bpmTracker: BpmTracker?
+
     
     private var gestureProcessor = HandGestureProcessor()
     private var evidenceBuffer = [HandGestureProcessor.PointsPair]()
@@ -35,10 +34,6 @@ final class CameraViewController : UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //Passing the bpm class Instance to out main view
-        let contentView = ContentView(bpmTracker: bpmTracker)
-        
         // Add state change handler to hand gesture processor.
         gestureProcessor.didChangeStateClosure = { [weak self] state in
             self?.handleGestureStateChange(state: state)
@@ -185,11 +180,17 @@ final class CameraViewController : UIViewController{
     
     private func updatePath(with points: HandGestureProcessor.PointsPair, from source: String) {
         // Get the mid point between the tips.
-        if control.can_send{
-            print("They're touching Update Path")
-            control = Time_Control(0.8)
-            control.start()
-            bpmTracker.logBPM()
+        if bpmTracker != nil{
+            if control.can_send{
+                print("They're touching Update Path")
+                control = Time_Control(0.8)
+                control.start()
+                
+                
+                bpmTracker!.testName = "AAAAAAAAAAa"
+                bpmTracker!.logBPM()
+            }
+            
         }
     }
     

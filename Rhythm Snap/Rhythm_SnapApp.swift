@@ -9,11 +9,13 @@ import SwiftUI
 
 @main
 struct Rhythm_SnapApp: App {
+    
+    @StateObject public var bpmTracker = BpmTracker()
+    
     var body: some Scene {
         WindowGroup {
-            //MARK: REMOVE
-            let demoInstance = BpmTracker()
-            ContentView(bpmTracker: demoInstance)
+            ContentView()
+                .environmentObject(bpmTracker)
         }
     }
 }
