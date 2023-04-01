@@ -67,11 +67,8 @@
 			children = (
 				B6AC8E9629C52E6D00B0DCC4 /* Rhythm_SnapApp.swift */,
 				B6AC8E9829C52E6D00B0DCC4 /* ContentView.swift */,
-				B6FBF05629C629E1002CF067 /* HandGestureProcessor.swift */,
-				B63D5ADE29D60AE6001A12BA /* Helpers.swift */,
-				B6FBF05229C60DB5002CF067 /* FireWorks.swift */,
-				B6ACCE1D29D7F92900E2D324 /* BPM Stuff.swift */,
 				B6FBF04B29C60C6C002CF067 /* Camera */,
+				B6CBC18729D80E8900BF6896 /* Models */,
 				B6AC8E9A29C52E7000B0DCC4 /* Assets.xcassets */,
 				B6AC8E9C29C52E7000B0DCC4 /* Preview Content */,
 			);
@@ -84,6 +81,17 @@
 				B6AC8E9D29C52E7000B0DCC4 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B6CBC18729D80E8900BF6896 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B6FBF05629C629E1002CF067 /* HandGestureProcessor.swift */,
+				B63D5ADE29D60AE6001A12BA /* Helpers.swift */,
+				B6FBF05229C60DB5002CF067 /* FireWorks.swift */,
+				B6ACCE1D29D7F92900E2D324 /* BPM Stuff.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		B6FBF04B29C60C6C002CF067 /* Camera */ = {

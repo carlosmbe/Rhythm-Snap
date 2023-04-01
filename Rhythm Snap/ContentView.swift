@@ -9,7 +9,6 @@ import AVFoundation
 import SwiftUI
 
 
-
 struct ContentView: View {
     
     @EnvironmentObject var bpmTracker: BpmTracker
@@ -30,7 +29,7 @@ struct ContentView: View {
     var body: some View {
        
         ZStack {
-            CameraViewFinder.rotationEffect(.degrees(90))
+            CameraViewFinder.rotationEffect(.degrees(-90))
 
             BPMView().environmentObject(bpmTracker)
             
@@ -83,18 +82,10 @@ struct BPMView: View {
                     bpmTracker.allAccurateBeats.append(fullInterval)
                     
                  
-                   // print(allAccurateBeats)
-                 
                     if bpmTracker.timeElapsed >= 2 {  bpmTracker.timeElapsed = 1
                     }  else{ bpmTracker.timeElapsed += 1    }
                     
                     
-                    //Ok so the way we're doing this is that we're going to divide each time the user logs and then divide it by the number of seconds needed to perform a perfect bpm
-                    
-                    
-                    //MARK: IDEA FROM INTERNET: just store the start date and then get the time interval since now. The only issue is that would always return negative result. Just swap the dates to get positive result Date().timeIntervalSince(startDate)
-                    
-                    //MARK: Idea to test time ratio have a second timer that fires a tick tock sound at the number we're dividing by
                 }
         }
         .padding()

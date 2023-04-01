@@ -116,7 +116,7 @@ final class CameraViewController : UIViewController{
             // If there were no observations for more than 2 seconds reset gesture processor.
             
             //MARK: Change the time interval to BPM Time in MS
-            if Date().timeIntervalSince(lastObservationTimestamp) > (0.6316 * 2) {
+            if Date().timeIntervalSince(lastObservationTimestamp) > (0.6316 ) {
                 gestureProcessor.reset()
             }
            // cameraView.showPoints([], color: .clear)
@@ -175,28 +175,15 @@ final class CameraViewController : UIViewController{
     
     
     //TODO: MAke update path be a log BPM Button
-    
-    var control = Time_Control(0)
+
     
     private func updatePath(with points: HandGestureProcessor.PointsPair, from source: String) {
-        // Get the mid point between the tips.
-        if bpmTracker != nil{
-            if control.can_send{
-                print("They're touching Update Path")
-                control = Time_Control(0.8)
-                control.start()
-                
-                
-                bpmTracker!.testName = "AAAAAAAAAAa"
-                bpmTracker!.logBPM()
-            }
-            
-        }
+        print("called")
+        print("They're touching Update Path")
+        bpmTracker!.logBPM()
     }
     
     
-    
-
 }
 
 
@@ -240,14 +227,14 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
                 recognizedPoints.append(thumbTipPoint)
                 recognizedPoints.append(middleTipPoint)
                 
-                guard thumbTipPoint.confidence > 0.7 && middleTipPoint.confidence > 0.7 else{
+                guard thumbTipPoint.confidence > 0.4 && middleTipPoint.confidence > 0.4 else{
                     return
                 }
                 
                 thumbCGPoint = getFingerCGPoint(thumbTipPoint)
                 middlefingerCG = getFingerCGPoint(middleTipPoint)
                 
-                fingerTips = recognizedPoints.filter {  $0.confidence > 0.9 }
+                fingerTips = recognizedPoints.filter {  $0.confidence > 0.5 }
                 .map {
                     // Vision algorithms use a coordinate system with lower left origin and return normalized values relative to the pixel dimension of the input image. AVFoundation coordinates have an upper-left origin, so you convert the y-coordinate.
                     CGPoint(x: $0.location.x, y: 1 - $0.location.y)
