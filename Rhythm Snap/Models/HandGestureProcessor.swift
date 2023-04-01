@@ -6,11 +6,12 @@
 //
 
 import CoreGraphics
+import Foundation
 
 class HandGestureProcessor {
     enum State {
-        case possiblePinch
-        case pinched
+        case possibleTap
+        case tapped
         case possibleApart
         case apart
         case unknown
@@ -26,20 +27,23 @@ class HandGestureProcessor {
         }
     }
     
+    private var lastTapTimestamp: TimeInterval?
+    private let tapMinDistance: CGFloat
+    
+    
     private var pinchEvidenceCounter = 0
     private var apartEvidenceCounter = 0
-    private let pinchMaxDistance: CGFloat
+  //  private let pinchMaxDistance: CGFloat
     private let evidenceCounterStateTrigger: Int
     
     var didChangeStateClosure: ((State) -> Void)?
     
     private (set) var lastProcessedPointsPair = PointsPair(.zero, .zero)
     
-    init(pinchMaxDistance: CGFloat = 20, evidenceCounterStateTrigger: Int = 3) {
-        self.pinchMaxDistance = pinchMaxDistance
+    init(tapMinDistance: CGFloat = 40, evidenceCounterStateTrigger: Int = 3) {
+        self.tapMinDistance = tapMinDistance
         self.evidenceCounterStateTrigger = evidenceCounterStateTrigger
     }
-    
     func reset() {
         state = .unknown
         pinchEvidenceCounter = 0
@@ -47,22 +51,27 @@ class HandGestureProcessor {
     }
     
     func processPointsPair(_ pointsPair: PointsPair) {
-        
         lastProcessedPointsPair = pointsPair
-        //The CG Point extension is in MagicProcesses
         let distance = pointsPair.middleTip.distance(from: pointsPair.thumbTip)
-        if distance < pinchMaxDistance {
-            // Keep accumulating evidence for pinch state.
-            pinchEvidenceCounter += 1
-            apartEvidenceCounter = 0
-            // Set new state based on evidence amount.
-            state = (pinchEvidenceCounter >= evidenceCounterStateTrigger) ? .pinched : .possiblePinch
+        let currentTime = Date().timeIntervalSince1970
+
+        if distance < tapMinDistance {
+            if let lastTapTime = lastTapTimestamp, currentTime - lastTapTime < 0.3 {
+                // If the time since the last tap is less than 0.3 seconds (or any desired threshold), it is considered a tap
+                state = .tapped
+                // Reset the last tap timestamp
+                lastTapTimestamp = nil
+            } else {
+                // If the time since the last tap is greater than the threshold, store the current time as the last tap timestamp
+                lastTapTimestamp = currentTime
+                state = .possibleTap
+            }
         } else {
             // Keep accumulating evidence for apart state.
             apartEvidenceCounter += 1
-            pinchEvidenceCounter = 0
             // Set new state based on evidence amount.
             state = (apartEvidenceCounter >= evidenceCounterStateTrigger) ? .apart : .possibleApart
         }
     }
+    
 }

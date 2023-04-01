@@ -41,11 +41,11 @@ struct ContentView: View {
 struct BPMView: View {
     
     @EnvironmentObject var bpmTracker: BpmTracker
-
+    
     var body: some View {
         VStack {
             
-            if bpmTracker.logged{
+            if bpmTracker.logged {
                 
                 Circle()
                     .fill(bpmTracker.perfColour)
@@ -53,12 +53,12 @@ struct BPMView: View {
                     .modifier(ParticlesModifier())
                     .offset(x: -100, y : -50)
                 
+                // Use Timer for the visual effect
                     .onReceive(bpmTracker.timer){ _ in
-                        bpmTracker.logged = false
-                    }
+                    bpmTracker.logged = false
+                }
                 
             }
-            
             
             Button("Log Time", action: bpmTracker.logBPM)
                 .buttonStyle(.borderedProminent)
@@ -70,27 +70,21 @@ struct BPMView: View {
             
             Text(bpmTracker.testName).font(.title)
             
-            Text("Counts: \(bpmTracker.timeElapsed) sec")
-                     // 2
-                .onReceive(bpmTracker.timer) { firedDate in
+            Text("Counts: \(bpmTracker.allAccurateBeats.count % 2 + 1) beats")
+                // Use bpmTracker.timer for the audio effect and beat count
+                .onReceive(bpmTracker.timer) { _ in
                     
                     AudioServicesPlaySystemSound(SystemSoundID(1057))
                     
-                    let bpm =  0.6316 * 2//632MS is 1/4 at 95 BPM Tempo. That's what somber dreams is at
-                    
-                    let fullInterval = firedDate.timeIntervalSince(bpmTracker.startDate)
-                    bpmTracker.allAccurateBeats.append(fullInterval)
-                    
-                 
-                    if bpmTracker.timeElapsed >= 2 {  bpmTracker.timeElapsed = 1
-                    }  else{ bpmTracker.timeElapsed += 1    }
-                    
-                    
+                    let currentTime = Date().timeIntervalSince(bpmTracker.startDate)
+                    bpmTracker.allAccurateBeats.append(currentTime)
                 }
         }
         .padding()
     }
 }
+
+
 
 /*
 struct ContentView_Previews: PreviewProvider {

@@ -17,6 +17,7 @@ enum errors: Error{
 final class CameraViewController : UIViewController{
     
     var bpmTracker: BpmTracker?
+    private var lastUpdateTime: TimeInterval?
 
     
     private var gestureProcessor = HandGestureProcessor()
@@ -136,37 +137,22 @@ final class CameraViewController : UIViewController{
     private func handleGestureStateChange(state: HandGestureProcessor.State) {
         let pointsPair = gestureProcessor.lastProcessedPointsPair
         var tipsColor: UIColor
-     
-        
+
         switch state {
-            
-        case .possiblePinch, .possibleApart:
-            // We are in one of the "possible": states, meaning there is not enough evidence yet to determine
-            // if we want to draw or not. For now, collect points in the evidence buffer, so we can add them
-            // to a drawing path when required.
+        case .possibleTap, .possibleApart:
             evidenceBuffer.append(pointsPair)
             tipsColor = .orange
-        
-        case .pinched:
-            /* We have enough evidence to draw. Draw the points collected in the evidence buffer, if any.
-            for bufferedPoints in evidenceBuffer {
-                updatePath(with: bufferedPoints, from: "Pinched")
-            }*/
-            // Clear the evidence buffer.
+
+        case .tapped:
             evidenceBuffer.removeAll()
-            // Finally, draw the current point.
-            updatePath(with: pointsPair, from: "Pinched")
+            testBPMTap(with: pointsPair, from: "Tapped")
             tipsColor = .green
-            
-            
+
         case .apart, .unknown:
-            // We have enough evidence to not draw. Discard any evidence buffer points.
             evidenceBuffer.removeAll()
-            // And draw the last segment of our draw path.
-         //   updatePath(with: pointsPair)
             tipsColor = .red
         }
-     //MARK: COMMENTED OUT CAUSE IDK WHETHERE OR NOT TO KEEP   cameraView.showPoints([pointsPair.thumbTip, pointsPair.middleTip], color: tipsColor)
+        // Update any other UI elements as needed
     }
     
     
@@ -177,10 +163,21 @@ final class CameraViewController : UIViewController{
     //TODO: MAke update path be a log BPM Button
 
     
-    private func updatePath(with points: HandGestureProcessor.PointsPair, from source: String) {
-        print("called")
-        print("They're touching Update Path")
+    private func testBPMTap(with points: HandGestureProcessor.PointsPair, from source: String) {
+        
+        let currentTime = Date().timeIntervalSince1970
+
+        if let lastUpdate = lastUpdateTime, currentTime - lastUpdate < 0.8 {
+            // If less than 0.8 seconds have passed since the last update, return without updating the path
+            return
+        }
+        
         bpmTracker!.logBPM()
+        lastUpdateTime = currentTime
+        
+        print("called from \(source)")
+        print("They're touching Update Path")
+     
     }
     
     
@@ -227,14 +224,14 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
                 recognizedPoints.append(thumbTipPoint)
                 recognizedPoints.append(middleTipPoint)
                 
-                guard thumbTipPoint.confidence > 0.4 && middleTipPoint.confidence > 0.4 else{
+                guard thumbTipPoint.confidence > 0.8 && middleTipPoint.confidence > 0.8 else{
                     return
                 }
                 
                 thumbCGPoint = getFingerCGPoint(thumbTipPoint)
                 middlefingerCG = getFingerCGPoint(middleTipPoint)
                 
-                fingerTips = recognizedPoints.filter {  $0.confidence > 0.5 }
+                fingerTips = recognizedPoints.filter {  $0.confidence > 0.8 }
                 .map {
                     // Vision algorithms use a coordinate system with lower left origin and return normalized values relative to the pixel dimension of the input image. AVFoundation coordinates have an upper-left origin, so you convert the y-coordinate.
                     CGPoint(x: $0.location.x, y: 1 - $0.location.y)

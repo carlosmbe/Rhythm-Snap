@@ -86,10 +86,10 @@
 		B6CBC18729D80E8900BF6896 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B6ACCE1D29D7F92900E2D324 /* BPM Stuff.swift */,
 				B6FBF05629C629E1002CF067 /* HandGestureProcessor.swift */,
 				B63D5ADE29D60AE6001A12BA /* Helpers.swift */,
 				B6FBF05229C60DB5002CF067 /* FireWorks.swift */,
-				B6ACCE1D29D7F92900E2D324 /* BPM Stuff.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
