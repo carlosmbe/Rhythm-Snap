@@ -8,7 +8,7 @@
 import AVFoundation
 import SwiftUI
 
-class BpmTracker: ObservableObject {
+class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     var audioPlayer: AVAudioPlayer?
     
@@ -76,6 +76,7 @@ class BpmTracker: ObservableObject {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayer?.volume = 1.0
                 audioPlayer?.prepareToPlay()
+                audioPlayer?.delegate = self
             } catch {
                 print("Error initializing audio player: \(error.localizedDescription)")
             }
@@ -83,6 +84,14 @@ class BpmTracker: ObservableObject {
             print("Audio file not found")
         }
     }
+
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if flag {
+            //TODO: Add your performance review logic here
+            print("Song finished playing")
+        }
+    }
+
     
     
 }

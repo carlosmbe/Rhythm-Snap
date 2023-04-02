@@ -4,6 +4,7 @@
 //
 //  Created by Carlos Mbendera on 2023-04-01.
 //
+
 import SwiftUI
 
 struct OnboardingView: View {
@@ -18,7 +19,7 @@ struct OnboardingView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                Text("Choose your preferred way to log your BPM")
+                Text("Choose your preferred way to practice")
                     .font(.headline)
                     .multilineTextAlignment(.center)
                     .padding()
@@ -27,7 +28,7 @@ struct OnboardingView: View {
                     VStack {
                         Image(systemName: "camera.viewfinder")
                             .font(.system(size: 60))
-                        Text("Camera")
+                        Text("Camera\nx\nVision")
                             .font(.headline)
                     }
                     .padding()

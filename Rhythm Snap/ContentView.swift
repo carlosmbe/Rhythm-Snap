@@ -11,6 +11,9 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @StateObject var audioAnalyzer = AudioAnalyzer()
+    @State private var progress: CGFloat = 0.0
+    
     @EnvironmentObject var bpmTracker: BpmTracker
     
     //MARK: Overlays work. Not using overlay array with chords right nnow. Mainly for debugging
@@ -26,20 +29,60 @@ struct ContentView: View {
     }
     
     var body: some View {
-       
-        ZStack {
-            CameraViewFinder.rotationEffect(.degrees(-90))
+        VStack{
+            
 
-            BPMView()
-                .environmentObject(bpmTracker)
+            ProgressBar(value: $progress)
+                          .frame(height: 4)
+                          .padding(8)
+
+            ZStack {
+                CameraViewFinder
+                    .rotationEffect(.degrees(-90))
+                    .scaleEffect(1.8)
+                    .padding()
+        
+                
+                BPMView()
+                    .environmentObject(bpmTracker)
+            }
+    
+            
+            
+            WaveformView(audioData: $audioAnalyzer.audioData)
+                           .frame(height: 100)
+                           .padding()
+            
+           
+            
+            
+        }.onAppear{
+            audioAnalyzer.setupAudioPlayer()
+            startUpdatingProgressBar()
         }
     }
+    
+    func startUpdatingProgressBar() {
+           Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+               guard let player = bpmTracker.audioPlayer else { return }
+               
+               if player.isPlaying {
+                   progress = CGFloat(player.currentTime / player.duration)
+               } else {
+                   timer.invalidate()
+               }
+           }
+       }
+
+    
+    
 }
 
 
 struct BPMView: View {
     
     @EnvironmentObject var bpmTracker: BpmTracker
+    
     
     @State var showLogButton = false
     
@@ -121,3 +164,23 @@ struct FingersOverlay: Shape {
         return Path(pointsPath.cgPath)
     }
 }
+
+
+struct ProgressBar: View {
+    @Binding var value: CGFloat
+
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle().frame(width: geometry.size.width, height: geometry.size.height)
+                    .opacity(0.3)
+                    .foregroundColor(.purple)
+
+                Rectangle().frame(width: geometry.size.width * value, height: geometry.size.height)
+                    .foregroundColor(.red)
+            }
+        }
+    }
+}
+
+
