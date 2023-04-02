@@ -19,7 +19,7 @@ struct OnboardingView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                Text("Choose your preferred way to practice")
+                Text("Choose your new way of practicing rhythm")
                     .font(.headline)
                     .multilineTextAlignment(.center)
                     .padding()
@@ -28,7 +28,7 @@ struct OnboardingView: View {
                     VStack {
                         Image(systemName: "camera.viewfinder")
                             .font(.system(size: 60))
-                        Text("Camera\nx\nVision")
+                        Text("Camera x Vision")
                             .font(.headline)
                     }
                     .padding()

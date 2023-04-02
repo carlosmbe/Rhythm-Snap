@@ -19,10 +19,29 @@ struct ContentView: View {
     //MARK: Overlays work. Not using overlay array with chords right nnow. Mainly for debugging
     @State private var overlayPoints: [CGPoint] = []
     
+    var TopTextView : some View{
+        VStack{
+            
+            Text(bpmTracker.performance)
+                .foregroundColor(bpmTracker.perfColour)
+                .padding()
+            
+            Text("Counts: \(bpmTracker.allAccurateBeats.count % 2 + 1) beats")
+            // Use bpmTracker.timer for the audio effect and beat count
+                .onReceive(bpmTracker.timer) { _ in
+                    
+                    AudioServicesPlaySystemSound(SystemSoundID(1057))
+                    
+                    let currentTime = Date().timeIntervalSince(bpmTracker.startDate)
+                    bpmTracker.allAccurateBeats.append(currentTime)
+                }
+        }
+    }
+    
     var CameraViewFinder : some View{
         CameraView {    overlayPoints = $0  }
             .overlay(FingersOverlay(with: overlayPoints)
-            .foregroundColor(.green)
+                .foregroundColor(.green)
             )
             .ignoresSafeArea()
         
@@ -31,29 +50,30 @@ struct ContentView: View {
     var body: some View {
         VStack{
             
-
+            TopTextView
+            
             ProgressBar(value: $progress)
-                          .frame(height: 4)
-                          .padding(8)
-
+                .frame(height: 4)
+                .padding(8)
+            
             ZStack {
                 CameraViewFinder
                     .rotationEffect(.degrees(-90))
                     .scaleEffect(1.8)
                     .padding()
-        
+                
                 
                 BPMView()
                     .environmentObject(bpmTracker)
             }
-    
+            
             
             
             WaveformView(audioData: $audioAnalyzer.audioData)
-                           .frame(height: 100)
-                           .padding()
+                .frame(height: 100)
+                .padding()
             
-           
+            
             
             
         }.onAppear{
@@ -63,17 +83,17 @@ struct ContentView: View {
     }
     
     func startUpdatingProgressBar() {
-           Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-               guard let player = bpmTracker.audioPlayer else { return }
-               
-               if player.isPlaying {
-                   progress = CGFloat(player.currentTime / player.duration)
-               } else {
-                   timer.invalidate()
-               }
-           }
-       }
-
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+            guard let player = bpmTracker.audioPlayer else { return }
+            
+            if player.isPlaying {
+                progress = CGFloat(player.currentTime / player.duration)
+            } else {
+                timer.invalidate()
+            }
+        }
+    }
+    
     
     
 }
@@ -99,8 +119,8 @@ struct BPMView: View {
                 
                 // Use Timer for the visual effect
                     .onReceive(bpmTracker.timer){ _ in
-                    bpmTracker.logged = false
-                }
+                        bpmTracker.logged = false
+                    }
                 
             }
             
@@ -108,44 +128,26 @@ struct BPMView: View {
                 Button("Tempo Log", action: bpmTracker.logBPM)
                     .buttonStyle(.borderedProminent)
             }
-                
-                
             
-            Text(bpmTracker.performance)
-                .foregroundColor(bpmTracker.perfColour)
-                .padding()
-                .onAppear {
-                    bpmTracker.setupAudioPlayer()
-                    bpmTracker.audioPlayer?.play()
-                }
             
-            Text("Counts: \(bpmTracker.allAccurateBeats.count % 2 + 1) beats")
-                // Use bpmTracker.timer for the audio effect and beat count
-                .onReceive(bpmTracker.timer) { _ in
-                    
-                    AudioServicesPlaySystemSound(SystemSoundID(1057))
-                    
-                    let currentTime = Date().timeIntervalSince(bpmTracker.startDate)
-                    bpmTracker.allAccurateBeats.append(currentTime)
-                }
         }
         .padding()
         .onAppear {
-                   bpmTracker.setupAudioPlayer()
-                   bpmTracker.audioPlayer?.play()
-               }
+            bpmTracker.setupAudioPlayer()
+            bpmTracker.audioPlayer?.play()
+        }
     }
 }
 
 
 
 /*
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(bpmTracke)
-    }
-}
-*/
+ struct ContentView_Previews: PreviewProvider {
+ static var previews: some View {
+ ContentView(bpmTracke)
+ }
+ }
+ */
 
 struct FingersOverlay: Shape {
     let points: [CGPoint]
@@ -168,14 +170,14 @@ struct FingersOverlay: Shape {
 
 struct ProgressBar: View {
     @Binding var value: CGFloat
-
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 Rectangle().frame(width: geometry.size.width, height: geometry.size.height)
                     .opacity(0.3)
                     .foregroundColor(.purple)
-
+                
                 Rectangle().frame(width: geometry.size.width * value, height: geometry.size.height)
                     .foregroundColor(.red)
             }

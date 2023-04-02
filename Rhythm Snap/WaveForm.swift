@@ -35,6 +35,7 @@ struct WaveformView: View {
 
 
 class AudioAnalyzer: ObservableObject {
+    
     private var audioEngine = AVAudioEngine()
     private var audioPlayer: AVAudioPlayerNode?
     
@@ -62,6 +63,8 @@ class AudioAnalyzer: ObservableObject {
 
         try! audioEngine.start()
         audioPlayer!.play()
+    
+            
     }
     
     func updateAudioData(buffer: AVAudioPCMBuffer) {

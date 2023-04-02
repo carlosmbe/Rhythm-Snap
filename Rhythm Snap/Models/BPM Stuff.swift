@@ -13,8 +13,8 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var audioPlayer: AVAudioPlayer?
     
     @Published var logged = false
+    @Published var songDone = false
 
-    
     @Published var performance = ""
     @Published var perfColour = Color.purple
     
@@ -31,29 +31,33 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func logBPM() {
         
-        let userTime = Date().timeIntervalSince(startDate)
-        userLoggedTimes.append(userTime)
-        
-        let score = findNearestBeatScore(userTime)
-        
-        if score < allowedTimeWindow {
-            perfColour = Color.green
-            performance = "Good Timing Baby"
+        if songDone !=  true{
+          
+            let userTime = Date().timeIntervalSince(startDate)
+            userLoggedTimes.append(userTime)
             
-            let roundedFloat = Float(round(10000 * score) / 10000)
-            print("Good Timing Baby with \n \(roundedFloat)")
-        } else {
-            perfColour = Color.red
-            performance = "Not bad but not great"
-            print("Not bad but not great with \n \(score)")
+            let score = findNearestBeatScore(userTime)
+            
+            if score < allowedTimeWindow {
+                perfColour = Color.green
+                performance = "Good Timing Baby"
+                
+                let roundedFloat = Float(round(10000 * score) / 10000)
+                print("Good Timing Baby with \n \(roundedFloat)")
+            } else {
+                perfColour = Color.red
+                performance = "Not bad but not great"
+                print("Not bad but not great with \n \(score)")
+            }
+            
+            logged = true
+            
+            // Update the startDate to the next beat
+            let interval = 0.6316 * 2
+            let nextBeat = ceil(userTime / interval) * interval
+            startDate = Date(timeIntervalSinceNow: nextBeat - userTime)
         }
         
-        logged = true
-        
-        // Update the startDate to the next beat
-        let interval = 0.6316 * 2
-        let nextBeat = ceil(userTime / interval) * interval
-        startDate = Date(timeIntervalSinceNow: nextBeat - userTime)
     }
     
     private func findNearestBeatScore(_ userTime: TimeInterval) -> TimeInterval {
@@ -74,7 +78,8 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
             let url = URL(fileURLWithPath: path)
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.volume = 1.0
+                //MARK: Changed the volume to zero cause of the wave form's audio
+                audioPlayer?.volume = 0.0
                 audioPlayer?.prepareToPlay()
                 audioPlayer?.delegate = self
             } catch {
@@ -89,6 +94,10 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
         if flag {
             //TODO: Add your performance review logic here
             print("Song finished playing")
+            performance = "We're Done Now.\n Hope You had fun"
+            timer.upstream.connect().cancel()
+            songDone = true
+            
         }
     }
 
