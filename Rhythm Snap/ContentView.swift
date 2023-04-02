@@ -41,6 +41,8 @@ struct BPMView: View {
     
     @EnvironmentObject var bpmTracker: BpmTracker
     
+    @State var showLogButton = false
+    
     var body: some View {
         VStack {
             
@@ -59,9 +61,20 @@ struct BPMView: View {
                 
             }
             
+            if showLogButton{
+                Button("Tempo Log", action: bpmTracker.logBPM)
+                    .buttonStyle(.borderedProminent)
+            }
+                
+                
+            
             Text(bpmTracker.performance)
                 .foregroundColor(bpmTracker.perfColour)
                 .padding()
+                .onAppear {
+                    bpmTracker.setupAudioPlayer()
+                    bpmTracker.audioPlayer?.play()
+                }
             
             Text("Counts: \(bpmTracker.allAccurateBeats.count % 2 + 1) beats")
                 // Use bpmTracker.timer for the audio effect and beat count
@@ -74,6 +87,10 @@ struct BPMView: View {
                 }
         }
         .padding()
+        .onAppear {
+                   bpmTracker.setupAudioPlayer()
+                   bpmTracker.audioPlayer?.play()
+               }
     }
 }
 

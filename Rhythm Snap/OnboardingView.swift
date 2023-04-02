@@ -8,6 +8,8 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var selectedOption: Int? = nil
+    
+    
 
     var body: some View {
         NavigationView {
@@ -32,7 +34,7 @@ struct OnboardingView: View {
                     .background(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 2))
                 }
 
-                NavigationLink(destination: BPMView(), tag: 2, selection: $selectedOption) {
+                NavigationLink(destination: BPMView(showLogButton: true), tag: 2, selection: $selectedOption) {
                     VStack {
                         Image(systemName: "rectangle")
                             .font(.system(size: 60))
