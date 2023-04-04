@@ -39,30 +39,30 @@ struct DemoView: View {
                 .padding()
             
             
-            Button("Rotate Camera View"){
-                withAnimation{
-                    bpmTracker.rotateAngle += Angle(degrees: 90)
-                }
-            }
-            .buttonStyle(.borderedProminent)
-            .padding()
-            
-            
             CameraViewFinder
                 .rotationEffect(bpmTracker.rotateAngle)
                 .padding()
             
-            Text("Press the Camera x Vision Button when ready")
+            Text("Press the Start Session Button when ready")
                 .font(.title)
+                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                 .multilineTextAlignment(.center)
-                  .padding([.bottom, .top], 20)
+               .padding([.bottom, .top], 20)
+               .foregroundStyle(
+                
+                LinearGradient(
+                    colors: [.red, .blue, .green, .yellow],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+        
             
             
             
         }
     }
     
-}
 
 
 struct DemoView_Previews: PreviewProvider {

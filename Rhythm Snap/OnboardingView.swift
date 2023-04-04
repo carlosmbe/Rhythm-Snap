@@ -8,17 +8,29 @@
 import SwiftUI
 
 struct OnboardingView: View {
-
+    
     @EnvironmentObject var bpmTracker: BpmTracker
-        
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Text("Welcome to Rhythm Snap")
+                Text("Rhythm Snap")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.red, .blue, .green, .yellow],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                 
-                Text("Your new way of practicing rhythm")
+                Text("A new way of practicing ")
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                
+                
+                Text("Pick an option to begin")
                     .font(.headline)
                     .multilineTextAlignment(.center)
                     .padding()
@@ -38,9 +50,9 @@ struct OnboardingView: View {
                 
                 NavigationLink(destination: DemoView()) {
                     VStack {
-                        Image(systemName: "livephoto.play")
+                        Image(systemName: "camera.viewfinder")
                             .font(.system(size: 60))
-                        Text("Practice Vision")
+                        Text("Test Vision")
                             .font(.headline)
                     }
                     .padding()
@@ -50,9 +62,9 @@ struct OnboardingView: View {
                 
                 NavigationLink(destination: ContentView()) {
                     VStack {
-                        Image(systemName: "camera.viewfinder")
+                        Image(systemName: "livephoto.play")
                             .font(.system(size: 60))
-                        Text("Camera x Vision")
+                        Text("Start Session")
                             .font(.headline)
                     }
                     .padding()
@@ -60,7 +72,7 @@ struct OnboardingView: View {
                 }
                 
                 
-    
+                
                 Button("Rotate Camera View"){
                     withAnimation{
                         bpmTracker.rotateAngle += Angle(degrees: 90)
@@ -69,12 +81,8 @@ struct OnboardingView: View {
                 .buttonStyle(.borderedProminent)
                 
                 
-      
-                
                 Toggle("Show Tempo Log Button", isOn: $bpmTracker.showButton)
                     .padding()
-                
-               
                 
                 Spacer()
             }
@@ -83,6 +91,7 @@ struct OnboardingView: View {
         }
     }
 }
+
 
 
 struct OnboardingView_Previews: PreviewProvider {
