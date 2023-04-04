@@ -44,6 +44,7 @@ final class CameraViewController : UIViewController{
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         do{
+            
             if cameraFeedSession == nil{
                 try setupAVSession()
                 
@@ -51,7 +52,15 @@ final class CameraViewController : UIViewController{
                 //MARK: Commented out cause it cropped
              //   cameraView.previewLayer.videoGravity = .resizeAspectFill
             }
-            cameraFeedSession?.startRunning()
+            
+            //MARK: Surronded the code into a DispatchQueue Cause we were having crashes
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.cameraFeedSession?.startRunning()
+               }
+            
+            
+            
+          
         }catch{
             print(error.localizedDescription)
         }

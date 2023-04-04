@@ -17,7 +17,7 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var showButton = false
     
     @Published var logged = false
-    @Published var songDone = false
+    @Published var songDone = true
 
     @Published var performance = "Ready?"
     @Published var perfColour = Color.purple

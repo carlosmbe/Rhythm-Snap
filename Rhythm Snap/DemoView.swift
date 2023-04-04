@@ -25,22 +25,45 @@ struct DemoView: View {
     
     var body: some View {
         
-        Text("This section illustrates how the camera is tracking your fingers")
-                           .font(.largeTitle)
-                           .fontWeight(.bold)
-        
-        CameraViewFinder
-            .rotationEffect(bpmTracker.rotateAngle)
+        VStack{
+            
+            
+            Text("This section illustrates how the camera is tracking your fingers")
+                .font(.headline)
+                .multilineTextAlignment(.center)
+                .padding()
+            
+            
+            Text("There should be a purple dot on your thumb and middle finger\n Lighting and Environmental Factors may cause a less than ideal experience.\n Use the 'Tempo Button' toggle in such situations")
+                .multilineTextAlignment(.center)
+                .padding()
+            
+            
+            Button("Rotate Camera View"){
+                withAnimation{
+                    bpmTracker.rotateAngle += Angle(degrees: 90)
+                }
+            }
+            .buttonStyle(.borderedProminent)
             .padding()
-            .onAppear{
-                bpmTracker.songDone = true
-            }
-            .onDisappear{
-                bpmTracker.songDone = false
-            }
+            
+            
+            CameraViewFinder
+                .rotationEffect(bpmTracker.rotateAngle)
+                .padding()
+            
+            Text("Press the Camera x Vision Button when ready")
+                .font(.title)
+                .multilineTextAlignment(.center)
+                  .padding([.bottom, .top], 20)
+            
+            
+            
+        }
     }
     
 }
+
 
 struct DemoView_Previews: PreviewProvider {
     static var previews: some View {

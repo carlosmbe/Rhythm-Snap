@@ -63,8 +63,7 @@ struct ContentView: View {
                 .padding(8)
             
             ZStack {
-                
-
+            
                 CameraViewFinder
                     .rotationEffect(bpmTracker.rotateAngle)
                  //   .scaleEffect(currentOrientation == .landscapeRight || currentOrientation == .landscapeLeft ? 1.8 : 1)
@@ -99,6 +98,8 @@ struct ContentView: View {
         .onDisappear{
             bpmTracker.audioPlayer?.stop()
             audioAnalyzer.stopAudio()
+            bpmTracker.timer.upstream.connect().cancel()
+            bpmTracker.songDone = true
         }
         
     }

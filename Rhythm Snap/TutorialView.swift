@@ -67,13 +67,13 @@ struct TutorialView: View {
                     HStack {
                         Text("2.")
                             .fontWeight(.bold)
-                        Text("You can see which fingers the cameera is using if you wait for the song's end.")
+                        Text("You can see which fingers the camera is using in 'Practice Vision' or if you wait for the song's end.")
                     }
                     
                     HStack {
                         Text("3.")
                             .fontWeight(.bold)
-                        Text("Use the Button if tapping is too hard.")
+                        Text("Use the Button if tapping with Vision is too hard.")
                     }
                     
                     HStack {
@@ -98,7 +98,9 @@ struct TutorialView: View {
             
             Spacer()
             
-            NavigationLink(destination: ContentView())  {
+            
+            
+            NavigationLink(destination: DemoView())  {
                 Text("Get Started")
                     .font(.title2)
                     .fontWeight(.bold)
