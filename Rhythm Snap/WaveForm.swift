@@ -85,5 +85,12 @@ class AudioAnalyzer: ObservableObject {
             audioData[i] = sum / Float(stride)
         }
     }
+    
+    func stopAudio() {
+        audioPlayer?.stop()
+        audioEngine.stop()
+        audioEngine.reset()
+    }
+    
 }
 

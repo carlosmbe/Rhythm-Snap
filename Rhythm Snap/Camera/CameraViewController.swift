@@ -136,29 +136,20 @@ final class CameraViewController : UIViewController{
     
     private func handleGestureStateChange(state: HandGestureProcessor.State) {
         let pointsPair = gestureProcessor.lastProcessedPointsPair
-        var tipsColor: UIColor
 
         switch state {
         case .possibleTap, .possibleApart:
             evidenceBuffer.append(pointsPair)
-            tipsColor = .orange
 
         case .tapped:
             evidenceBuffer.removeAll()
             testBPMTap(with: pointsPair, from: "Tapped")
-            tipsColor = .green
 
         case .apart, .unknown:
             evidenceBuffer.removeAll()
-            tipsColor = .red
         }
-        // Update any other UI elements as needed
+      
     }
-    
-    
-    
-    
-    
     
     //TODO: MAke update path be a log BPM Button
 
@@ -181,6 +172,15 @@ final class CameraViewController : UIViewController{
     }
     
     
+    func processPointsOverlays(_ fingerTips: [CGPoint]) {
+
+       let convertedPoints = fingerTips.map {
+         cameraView.previewLayer.layerPointConverted(fromCaptureDevicePoint: $0)
+       }
+
+       pointsProcessorHandler?(convertedPoints)
+     }
+    
 }
 
 
@@ -197,6 +197,12 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
         defer {
           DispatchQueue.main.sync {
               self.snapProcessPoints(thumbTip: thumbCGPoint, middleTip: middlefingerCG)
+              
+              if bpmTracker!.songDone == true{
+                  //MARK: This line is responsible for displaying the overlays. I just don't want to constantly redraw the view during the song
+                  self.processPointsOverlays(fingerTips)
+              }
+              
           }
         }
 

@@ -12,10 +12,14 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     var audioPlayer: AVAudioPlayer?
     
+    @Published var rotateAngle = Angle(degrees: -90)
+    
+    @Published var showButton = false
+    
     @Published var logged = false
     @Published var songDone = false
 
-    @Published var performance = ""
+    @Published var performance = "Ready?"
     @Published var perfColour = Color.purple
     
     @Published var timer = Timer.publish(every: 0.6316 * 2, on: .main, in: .common).autoconnect()
@@ -28,6 +32,7 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     
     private let allowedTimeWindow: TimeInterval = 0.4
+    private var badsInRow = 0
     
     func logBPM() {
         
@@ -39,15 +44,29 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
             let score = findNearestBeatScore(userTime)
             
             if score < allowedTimeWindow {
-                perfColour = Color.green
-                performance = "Good Timing Baby"
+                
+                withAnimation{
+                    perfColour = Color.green
+                    performance = "Good Timing"
+                }
+                
+                badsInRow = 0
                 
                 let roundedFloat = Float(round(10000 * score) / 10000)
-                print("Good Timing Baby with \n \(roundedFloat)")
+                print("Good Timing with \n \(roundedFloat)")
             } else {
-                perfColour = Color.red
-                performance = "Not bad but not great"
+                
+                badsInRow += 1
+                
+                if badsInRow >= 1{
+                    withAnimation{
+                        perfColour = Color.orange
+                        performance = "Needs some work"
+                    }
+                }
+                
                 print("Not bad but not great with \n \(score)")
+                
             }
             
             logged = true
@@ -74,6 +93,7 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func setupAudioPlayer() {
+        
         if let path = Bundle.main.path(forResource: "song", ofType: "mp3") {
             let url = URL(fileURLWithPath: path)
             do {
@@ -81,6 +101,9 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 //MARK: Changed the volume to zero cause of the wave form's audio
                 audioPlayer?.volume = 0.0
                 audioPlayer?.prepareToPlay()
+                
+                songDone = false
+                
                 audioPlayer?.delegate = self
             } catch {
                 print("Error initializing audio player: \(error.localizedDescription)")
@@ -94,7 +117,10 @@ class BpmTracker: NSObject, ObservableObject, AVAudioPlayerDelegate {
         if flag {
             //TODO: Add your performance review logic here
             print("Song finished playing")
-            performance = "We're Done Now.\n Hope You had fun"
+            withAnimation{
+                performance = "We're Done Now.\nHope You had fun"
+                perfColour = .indigo
+            }
             timer.upstream.connect().cancel()
             songDone = true
             
