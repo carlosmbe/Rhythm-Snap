@@ -12,3 +12,11 @@ In addition, I incorporated Apple's Vision framework for the detection and analy
 
 Furthermore, I utilised SwiftUI for most of the app’s User Interface, with some UI Kit for the Camera’s Viewfinder. A standout feature of the UI is the dynamic waveform that visualises the song in real-time, rather than being pre-rendered. The responsive layout adapts to different screen sizes and displays the audio waves as a series of bars with gradient colours. The height of these bars changes based on the audio's volume at any given moment, creating an appealing visual representation of the audio.
 
+# Beautiful Pictures (Screenshots)
+
+![IMG_0226](https://github.com/carlosmbe/Rhythm-Snap/assets/53784701/a6e71aa7-a10e-4913-8c78-e12a9a2cf1a8)
+
+![IMG_0227](https://github.com/carlosmbe/Rhythm-Snap/assets/53784701/74438c96-0255-4dba-8607-81185cc6733b)
+
+
+![IMG_0230](https://github.com/carlosmbe/Rhythm-Snap/assets/53784701/e98dae70-3f5e-40fc-87ee-7934f57e19a4)
